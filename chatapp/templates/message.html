@@ -6,21 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Messages</title>
-    <!-- load static -->
     {% load static %}
-    <!-- <link rel="stylesheet" href="{% static 'style.css' %}"> -->
-    <!-- link to h=css file -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <!--  -->
     <div class="parent">
         <div class="child-2">
             <center><h2>Free Group Chats</h2></center><hr>
             <div class="chat-body-parent">
                 <div class="chat-body" id="tasks">
                     <div class="message" id="chatContainer">
-                      <!-- received messages and displayed here -->
                             {% for i in messages %}
                                 {% if i.sender != user %}
                                     <div class="receive">
@@ -35,9 +30,7 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-                    <!-- end receive messages -->
                     </div>
-
                     <div class="form">
                         <form action="" id="message-form" method="POST">
                             {% csrf_token %}
@@ -49,22 +42,16 @@
             </div>
         </div>
     </div>
-    <!-- <object width="480" height="500"
-        data="/chatapp/templates/dot.mp4"> 
-    </object>  -->
 </body>
-<!-- <script src="socket.io/socket.io.js"></script> -->
 <script>
     function scrollToBottom() {
         var chatContainer = document.getElementById("chatContainer");
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-    // var socket = io()
     const webSocketProtocol = window.location.protocol === "https:" ? "wss":"ws";
-    const wsEndpoint = `${webSocketProtocol}://${window.location.host}/ws/notification/{{room_name}}/`
+    const wsEndpoint = `${webSocketProtocol}://${window.location.host}/ws/notification/{{room_name}}/{{user}}/`
     const socket = new WebSocket(wsEndpoint);
     const inputArea=document.getElementById('msg');
-
     socket.onopen = (event) => {
         console.log("Socket is opened")
     };
@@ -75,14 +62,11 @@
         e.preventDefault();
         sendData();
     })
-
     inputArea.addEventListener('keypress', (e) => {
         if (e.key == 'Enter'){
             sendData();
         }
     })
-
-
     const sendData = () => {
         const message = document.getElementById('msg').value.trim();
         if (message !== "") {
@@ -99,23 +83,14 @@
         )
         } 
     }
-
-// Response from consumer on the server
     socket.addEventListener("message", (event) => {
         const messageData = JSON.parse(event.data)['message'];
-
         var sender = messageData['sender'];
         var message = messageData['message'];
         var time = messageData['time']
-
-        // Empty the message input field after the message has been sent
-        // if (sender == '{{user}}'){
-        // }
         document.getElementById('msg').value = '';
-
-        // Append the message to the chatbox
         var messageDiv = document.querySelector('.message');
-        if (sender != '{{user}}') { // Assuming you have a variable `currentUser` to hold the current user's name
+        if (sender != '{{user}}') {
             messageDiv.innerHTML += '<div class="receive"><p style="color: #000;">' + message + '<strong>-' + sender + '</strong> <span class="time">'+ time.hours+ ":" + time.minutes +'</span></p></div>';
         } else {
             messageDiv.innerHTML += '<div class="send"><p style="color: #000;">' + message + '<span class="time">'+ time.hours+ ":" + time.minutes +'</span></p></div>';
@@ -129,11 +104,11 @@
 </script>
 <style>
     #myVideo {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
     }
 * {
     padding: 0;
@@ -144,42 +119,11 @@
 
     .parent {
         background-color: rgb(204, 240, 183);
-      /* background: 
-      /* url("chatapp\templates\1077588731-preview.mp4") !important; */
     }
-
-    /* nav {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        background-color:red;
-        /* background: url('https://media.istockphoto.com/id/1403848173/vector/vector-online-chatting-pattern-online-chatting-seamless-background.jpg?s=612x612&w=0&k=20&c=W3O15mtJiNlJuIgU6S9ZlnzM_yCE27eqwTCfXGYwCSo=') ; */
-        /* padding: 10px; */
-    /* } */
-
-    /* nav ul li {
-        list-style: none;
-        display: inline-block;
-        padding: 10px;
-    } */
-
-    /* nav ul li:hover {
-        background-color: dodgerblue;
-        color: #fff;
-        transition: 0.8s;
-    } */
-
-    /* nav ul li a {
-        text-decoration: none;
-        color: #fff;
-    } */
-
     .parent {
         height: 100vh;
         display: flex;
         justify-content: center;
-        /* background-image: url("/static/img/bck.jpg");  */
-       
         background-position: center; 
         background-repeat: no-repeat; 
         background-size: cover; 
@@ -188,17 +132,14 @@
     }
 
     .child-1 {
-        /* height: 70vh; */
         width: 30%;
         margin: 10px;
         border-radius: 10px;
-        
         background-color: white;
     }
 
     .chat-room {
         width: 100%;
-        /* max-height: ; */
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -208,9 +149,7 @@
     }
 
     .profile-pic {
-        /* height: 80px; */
         width: 15%;
-        
         border-radius: 50px;
         background-color: #fff;
     }
@@ -240,7 +179,6 @@
 
 
     .child-2 {
-        /* max-height: 100vh; */
         width: 50%;
         margin: 10px;
         border-radius: 10px;
@@ -252,11 +190,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        /* height: 60vh; */
     }
 
     .chat-body, .message {
-        /* max-height: 100vh; */
         width: 100%;
         background-image: url('https://w0.peakpx.com/wallpaper/818/148/HD-wallpaper-whatsapp-background-cool-dark-green-new-theme-whatsapp.jpg');
         border-radius: 10px;
@@ -269,7 +205,7 @@
     }
 
     .message {
-        max-height: 400px;  /* Or whatever height value you see fit */
+        max-height: 400px;
         overflow-y: auto;
     }
 

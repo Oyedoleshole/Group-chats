@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentic User</title>
+</head>
+{% load static %}
+<body>
+    {% if request.user.is_authenticated %}
+        </p>Hello {{request.user}}</p>
+        <p>Chat with</p>
+        {% for user in all_user %}
+            <a href="{% url 'connect_with_' user=request.user.username join_user=user.username%}"><h4>{{ user.username }}</h4></a>
+        {% endfor %}
+    {% else %}
+        <p>Login first </p>
+    {% endif %}
+</body>
+</html>

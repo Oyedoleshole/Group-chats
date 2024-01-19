@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^l5b#2a&_o_&qbpnf4o@s=wl7dazy^xqbxb^w7f8k^u=54swr9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app','172.16.102.158']
+ALLOWED_HOSTS = ['.vercel.app','172.16.102.158','localhost','127.0.0.1']
 
 
 # Application definition
@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['.vercel.app','172.16.102.158']
 INSTALLED_APPS = [
     'daphne',
     'channels',
+    'django_private_chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chatapp'
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -136,3 +136,6 @@ MEDIA_ROOT =  os.path.join(BASE_DIR, 'home/media')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CHAT_WS_SERVER_HOST = 'localhost'
+CHAT_WS_SERVER_PORT = 5002
+CHAT_WS_SERVER_PROTOCOL = 'ws'
