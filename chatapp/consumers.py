@@ -24,7 +24,6 @@ class Privatechat(AsyncWebsocketConsumer):
     async def receive(self, text_data=None):
         print("Receiver is working")
         data = json.loads(text_data)
-        print(data)
         target_channel_name = f"{data['receiver']}_{data['sender']}"
         event = {
             'type': 'private_chat',
@@ -39,7 +38,6 @@ class Privatechat(AsyncWebsocketConsumer):
 
     async def private_chat(self, event):
         data = event
-        print("The data is ====>",data)
         response_data = {
             'user': data['user'],
             'receiver':data['receiver'],

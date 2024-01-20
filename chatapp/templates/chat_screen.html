@@ -155,16 +155,6 @@
 
 	}
 
-	.message{
-		width: 60%;
-		background: #78e08f;
-		margin-bottom: 5px;
-		border-top-right-radius: 15px;
-		border-bottom-right-radius: 15px;
-		border-bottom-left-radius: 15px;
-		padding: 8px 15px 0 15px;
-
-	}
 	.msg_container_send{
 		margin-top: auto;
 		margin-bottom: auto;
@@ -233,6 +223,61 @@
 		margin-bottom: 15px !important;
 	}
 	}
+	.message {
+        width: 100vw;
+        /* border-radius: 10px; */
+        display: flex;      
+        padding: 10px;
+        flex-direction: column;
+        ::-webkit-scrollbar{
+            display: none;
+        }
+    }
+
+
+    .message .send {
+        background-color: #98f898;
+        max-width: 400px;
+
+        padding: 10px;
+        margin-bottom: 10px;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+		border-top-left-radius: 10px;
+    }
+	.send {
+		/* color: red; */
+        align-self: flex-end;
+    }
+
+	.send p,
+	.receive P {
+		margin: 0;
+		font-size: 16px;
+	}
+
+	.send p span,
+	.receive p span{
+		margin-left: 10px;
+		opacity: .5;
+		font-size: 12px;
+		margin-bottom: -20px;
+	}
+
+    .message .receive {
+        align-self: flex-start;
+		background-color: #98f898;
+        max-width: 400px;
+		padding: 10px;
+
+        margin-bottom: 10px;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+		border-top-right-radius: 10px;
+		/* border-top-left-radius: none; */
+
+    }
+
 </style>
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -284,24 +329,12 @@
 							height: 75%;
 							"
 							>
-								<div class="img_cont_msg">
+								<!-- <div class="img_cont_msg">
 									<img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_container" id="msg_container">
+								</div> -->
+								<div class="message"
+								>
 
-									<!-- <div class="message">
-										<p>hjdshagdhsagdhsagdshgd</p>
-									</div>
-									<div class="message">
-										<p>hjdshagdhsagdhsagdshgd</p>
-									</div>
-									<div class="message">
-										<p>hjdshagdhsagdhsagdshgd</p>
-									</div>
-									<div class="message">
-										<p>hjdshagdhsagdhsagdshgd</p>
-									</div> -->
-									
 								</div>
 							</div>
 						</div>
@@ -310,7 +343,7 @@
 								<div class="input-group-append">
 									<span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
 								</div>
-								<textarea id="message" name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
+								<textarea id="send_message" name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
 								<div class="input-group-append">
 									<span id="send_btn" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
 								</div>
@@ -323,15 +356,11 @@
 	</body>
 </html>
 <script>
-
-	let messageList = [];
-
-
     const webSocketProtocol = window.location.protocol === "https:" ? "wss":"ws";
     const wsEndpoint = `${webSocketProtocol}://${window.location.host}/ws/private-chat/{{ user }}/{{ joinee_user }}/`
     const socket = new WebSocket(wsEndpoint);
     socket.onopen = (event) => {
-        console.log("Socket is opened", event)
+        console.log("Socket is opened")
     };
     socket.onclose = (event) =>{
         console.log("Socket is disconnected")
@@ -344,7 +373,7 @@
 
     })
     const message_data = () => {
-        message_ = document.getElementById('message').value;
+        message_ = document.getElementById('send_message').value;
         if (message_ !== ""){
             const obj1 = {
                 message: message_,
@@ -356,8 +385,13 @@
                 }
         }
         socket.send(JSON.stringify(obj1))
-		// messageList.push(obj1);
-
+		document.getElementById('send_message').value = '';
+		var messageDiv = document.querySelector('.message');
+		if (obj1.sender != '{{user}}') {
+            messageDiv.innerHTML += '<div class="receive"><p >' + obj1.message + '<span class="time">'+ obj1.time.hours+ ":" + obj1.time.minutes +'</span></p></div>';
+        } else {
+            messageDiv.innerHTML += '<div class="send"><p >' + obj1.message + '<span class="time">'+ obj1.time.hours+ ":" + obj1.time.minutes +'</span></p></div>';
+        }
     }
 }
 	socket.addEventListener("message", (event) => {
@@ -367,37 +401,18 @@
 			var message = messageData['message'];
 			var receiver = messageData['receiver']
 			var time = messageData['time']
-			console.log("message", sender, message, receiver, time);
-			var messageDiv = document.getElementById('msg_container')
-			console.log("The message div is =====>",messageDiv)
-			messageDiv.innerHTML += '<p style="color:white">'+message+'</p>'
-})
-
-
-// var messageDiv = document.getElementById('msg_container')
-//     const renderChat = () => {
-
-// 		if (messageList) {
-//             messageList.forEach((messageData, index) => {
-//                 var sender = "{{ request.user }}";
-// 				var message = messageData['message'];
-// 				var receiver = messageData['receiver']
-// 				var time = messageData['time']
-//                 console.log("render", sender, message, receiver, time);
-// 				const messageBox = document.createElement('div');
-// 				messageBox.className = 'message';
-// 				const messageDisp = document.createElement('p');
-// 				messageDisp.style.margin="4px"
-// 				messageDisp.innerText = message;
-// 				messageBox.appendChild(messageDisp)
-// 				messageDiv.appendChild(messageBox);
-//                 // messageDiv.innerHTML +=  message + '<span class="msg_time">' + time.hours +':'+ time.minutes +'</span>';
-//             })
-//         }
-// 	}
-
-// 	renderChat();
-
+			var messageDiv = document.querySelector('.message');
+        if (sender != '{{user}}') {
+            messageDiv.innerHTML += '<div class="receive"><p >' + message + '<span class="time">'+ time.hours+ ":" + time.minutes +'</span></p></div>';
+        } else {
+            messageDiv.innerHTML += '<div class="send"><p >' + message + '<span class="time">'+ time.hours+ ":" + time.minutes +'</span></p></div>';
+        }
+        scrollToBottom();
+    });
+    function scrollToBottom() {
+        var chatContainer = document.getElementById("msg_container");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
     $(document).ready(function(){
         $('#action_menu_btn').click(function(){
 	    $('.action_menu').toggle();
