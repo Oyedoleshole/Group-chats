@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from .models import Room, Message
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 def CreateRoom(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -35,3 +38,25 @@ def MessageView(request, room_name, username):
         'messages':get_messages,
     }
     return render(request, 'message.html', context)
+
+def video_room(request):
+    return render(request, 'room.html')
+
+def video_room_enter(request):
+    return render(request, 'lobby.html')
+@csrf_exempt
+def createUser(request):
+    print(request.body)
+    data = json.loads(request.body)
+    member, create = Room.objects.get_or_create(
+        room_name=data['room_name'],
+        name=data['name'],
+        uid=data['UID']
+    )
+    return JsonResponse({"name":data['name'],"created":True},safe=False)
+
+def getUser(request):
+    uid = request.GET.get('UID')
+    room_name = request.GET.get('room_name')
+    users = Room.objects.get(room_name=room_name, uid=uid)
+    return JsonResponse({"name":users.name},safe=False)
