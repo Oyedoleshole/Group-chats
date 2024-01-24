@@ -26,7 +26,8 @@ def chat_with(request):
 def connect_with(request, user, join_user):
     get_user = user
     get_join_user = join_user
-    return render(request, 'chat_screen.html',{'user':get_user,'joinee_user':get_join_user})
+    all_user = User.objects.all()
+    return render(request, 'chat_screen.html',{'user':get_user,'joinee_user':get_join_user,'all_user':all_user})
 
 def MessageView(request, room_name, username):
     get_room = Room.objects.get(room_name=room_name)
