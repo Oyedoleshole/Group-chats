@@ -1,10 +1,27 @@
 from django.shortcuts import render, redirect
 from .models import Room, Message
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+def login_user(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            messages.error(request, "No User Found")
+            return redirect('login')
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('chat-with')
+    return render(request, 'login.html')
 def CreateRoom(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -17,7 +34,7 @@ def CreateRoom(request):
             new_room.save()
     return render(request, 'index.html')
 
-@login_required(login_url='create-room')
+@login_required(login_url='login')
 def chat_with(request):
     all_user = User.objects.all()
     return render(request, "chat_with.html",{'all_user':all_user})
@@ -54,7 +71,7 @@ def createUser(request):
         name=data['name'],
         uid=data['UID']
     )
-    return JsonResponse({"name":data['name'],"created":True},safe=False)
+    return JsonResponse({"name":data['name']},safe=False)
 
 def getUser(request):
     uid = request.GET.get('UID')

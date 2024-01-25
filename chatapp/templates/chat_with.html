@@ -1,22 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Funky User List</title>
+    <title>User List</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #faeb95; /* Funky yellow background */
+            background-color: #f5f5f5; /* Light grey background */
         }
 
         .user-list-container {
             max-width: 600px;
             margin: 20px auto;
-            background-color: #ff69b4; /* Funky pink background */
+            background-color: #fff; /* White background */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
@@ -24,16 +25,17 @@
 
         .user-item {
             padding: 15px;
-            border-bottom: 1px solid #ff1493; /* Funky pink border */
+            border-bottom: 1px solid #ddd; /* Light grey border */
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         .user-item:hover {
-            background-color: #ffc0cb; /* Light pink on hover */
+            background-color: #f0f0f0; /* Light grey on hover */
+            transform: scale(1.02); /* Scale on hover for a subtle animation */
         }
 
         .user-avatar {
@@ -51,16 +53,16 @@
         .user-name {
             font-weight: bold;
             margin-bottom: 5px;
-            color: #00bfff; /* Funky blue text color */
+            color: #333; /* Dark text color */
         }
 
         .user-username {
-            color: #c1eec1; /* Funky green text color */
+            color: #666; /* Medium grey text color */
         }
 
-        .funky-button {
-            background-color: #f08862; /* Funky orange button color */
-            color: #ffffff;
+        .normal-button {
+            background-color: #3498db; /* Blue button color */
+            color: #fff;
             padding: 8px 15px;
             border: none;
             border-radius: 5px;
@@ -69,31 +71,33 @@
             transition: background-color 0.3s;
         }
 
-        .funky-button:hover {
-            background-color: #ff6347;
+        .normal-button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
         }
-        p{
-            margin-left:45%;
-            color:green
+
+        p {
+            margin-left: 45%;
+            color: green;
         }
     </style>
 </head>
 
 <body>
     <p>Hello {{ request.user }}</p>
+    <!-- <button class="btn-large">Signout</button> -->
     {% for user in all_user %}
     {% if request.user.username != user.username %}
-    <a class="connect-link" href="{% url 'connect_with_' user=request.user.username join_user=user.username %}">
     <div class="user-list-container">
-        <div class="user-item">
-            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fcartoon-avatar&psig=AOvVaw3bvLf3Zqv5lD0OZcT4D_sZ&ust=1706095287546000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCICnsLay84MDFQAAAAAdAAAAABAD" alt="User Avatar" class="user-avatar">
-            <div class="user-details">
-                <div class="user-name">{{ user.username }}</div>
-                <div class="user-username">{{ user.username }}</div>
+            <a class="connect-link" href="{% url 'connect_with_' user=request.user.username join_user=user.username %}">
+            <div class="user-item">
+                <img src="{% static 'images/avatar.png' %}" alt="User Avatar" class="user-avatar">
+                <div class="user-details">
+                    <div class="user-name">{{ user.username }}</div>
+                    <div class="user-username">{{ user.username }}</div>
+                </div>
             </div>
         </div>
-    </div>
-</a>
+    </a>
     {% endif %}
     {% endfor %}
 </body>

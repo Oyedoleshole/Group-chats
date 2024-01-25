@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +33,7 @@ ALLOWED_HOSTS = ['.vercel.app','172.16.102.158','localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',
     'daphne',
     'channels',
     'django_private_chat',

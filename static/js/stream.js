@@ -29,7 +29,7 @@ let joinAndDisplayLocalStream = async () => {
 }
 let handleUser = async (user, mediaType) => {
     remoteUsers[user.uid]=user
-    await client.subscibe(user, mediaType)
+    await client.subscribe(user, mediaType)
 
     if (mediaType === 'video'){
         let player = document.getElementById(`user-container${user.uid}`)
@@ -103,8 +103,10 @@ let createMember = async () => {
 let member = await res.json()
 return member
 }
+// console.log("==============>",user)
 let getMembers = async (user) => {
-    let res = fetch(`/getUsers/?UID=${user.uid}&room_name=${CHANNEL}`)
-    let member = (await res).json()
+    let res = await fetch(`/getUser/?UID=${UID}&room_name=${CHANNEL}`)
+    let member = await res.json()
+    console.log("Response is ========>",res);
     return member
 }
